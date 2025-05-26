@@ -66,3 +66,27 @@
     last-stake-height: uint
   }
 )
+
+(define-map atomic-swaps
+  { swap-id: (buff 32) }
+  {
+    initiator: principal,
+    recipient: principal,
+    sbtc-amount: uint,
+    btc-amount: uint,
+    hash-lock: (buff 32),
+    time-lock: uint,
+    status: (string-ascii 20),
+    created-at: uint
+  }
+)
+
+(define-map oracle-price-feeds
+  { token: principal }
+  {
+    price-in-sats: uint,
+    last-updated: uint,
+    provider: principal
+  }
+)
+
