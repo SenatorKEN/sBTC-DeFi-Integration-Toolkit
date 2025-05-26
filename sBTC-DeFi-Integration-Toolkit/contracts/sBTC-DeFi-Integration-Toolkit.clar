@@ -90,3 +90,25 @@
   }
 )
 
+(define-public (set-protocol-fee (new-fee uint))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (asserts! (< new-fee u100) err-invalid-params) ;; Fee can't exceed 10%
+    (ok (var-set protocol-fee new-fee))
+  )
+)
+
+(define-public (set-fee-recipient (new-recipient principal))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (ok (var-set fee-recipient new-recipient))
+  )
+)
+
+(define-public (toggle-emergency-shutdown)
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (ok (var-set emergency-shutdown (not (var-get emergency-shutdown))))
+  )
+)
+
