@@ -30,3 +30,39 @@
     last-updated: uint
   }
 )
+
+(define-map liquidity-providers
+  { pool-id: uint, provider: principal }
+  {
+    shares: uint,
+    sbtc-deposited: uint,
+    token-deposited: uint,
+    rewards-claimed: uint,
+    last-deposit-height: uint
+  }
+)
+
+(define-map yield-farms
+  { farm-id: uint }
+  {
+    pool-id: uint,
+    reward-token: principal,
+    reward-per-block: uint,
+    total-staked: uint,
+    start-height: uint,
+    end-height: uint,
+    last-reward-calculation: uint,
+    accumulated-rewards-per-share: uint,
+    is-active: bool
+  }
+)
+
+(define-map farmer-positions
+  { farm-id: uint, farmer: principal }
+  {
+    staked-amount: uint,
+    reward-debt: uint,
+    unclaimed-rewards: uint,
+    last-stake-height: uint
+  }
+)
