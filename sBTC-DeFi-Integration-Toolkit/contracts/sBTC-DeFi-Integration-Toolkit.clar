@@ -319,7 +319,7 @@
   }
 )
 
-;; 8. STAKING DERIVATIVES
+;; STAKING DERIVATIVES
 (define-map liquid-staking-tokens
   { lst-token: principal }
   {
@@ -342,7 +342,7 @@
   }
 )
 
-;; 9. PREDICTION MARKETS
+;; PREDICTION MARKETS
 (define-map prediction-markets
   { market-id: uint }
   {
@@ -363,6 +363,35 @@
     shares: uint,
     average-price: uint,
     potential-payout: uint
+  }
+)
+
+;; 10. PERPETUAL FUTURES
+(define-map perp-positions
+  { position-id: uint }
+  {
+    trader: principal,
+    asset: principal,
+    size: int, ;; Positive for long, negative for short
+    entry-price: uint,
+    margin: uint,
+    leverage: uint,
+    funding-rate: int,
+    last-funding-payment: uint,
+    is-active: bool
+  }
+)
+
+(define-map perp-markets
+  { asset: principal }
+  {
+    mark-price: uint,
+    index-price: uint,
+    funding-rate: int,
+    open-interest-long: uint,
+    open-interest-short: uint,
+    max-leverage: uint,
+    maintenance-margin: uint
   }
 )
 
