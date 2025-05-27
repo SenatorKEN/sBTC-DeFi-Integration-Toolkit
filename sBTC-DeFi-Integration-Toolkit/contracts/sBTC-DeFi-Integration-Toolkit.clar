@@ -272,7 +272,7 @@
   }
 )
 
-;; 6. NFT MARKETPLACE & FRACTIONALIZATION
+;; NFT MARKETPLACE & FRACTIONALIZATION
 (define-map nft-listings
   { nft-id: uint }
   {
@@ -306,7 +306,7 @@
   }
 )
 
-;; 7. AUTOMATED MARKET MAKER (AMM) WITH DYNAMIC FEES
+;; AUTOMATED MARKET MAKER (AMM) WITH DYNAMIC FEES
 (define-map dynamic-fee-pools
   { pool-id: uint }
   {
@@ -316,6 +316,53 @@
     last-volume: uint,
     current-fee: uint,
     fee-adjustment-frequency: uint
+  }
+)
+
+;; 8. STAKING DERIVATIVES
+(define-map liquid-staking-tokens
+  { lst-token: principal }
+  {
+    underlying-token: principal,
+    exchange-rate: uint,
+    total-staked: uint,
+    total-lst-supply: uint,
+    staking-rewards: uint,
+    last-rebase: uint
+  }
+)
+
+(define-map staking-positions
+  { user: principal, token: principal }
+  {
+    staked-amount: uint,
+    lst-amount: uint,
+    rewards-earned: uint,
+    last-claim: uint
+  }
+)
+
+;; 9. PREDICTION MARKETS
+(define-map prediction-markets
+  { market-id: uint }
+  {
+    creator: principal,
+    question: (string-ascii 200),
+    outcome-options: (list 10 (string-ascii 50)),
+    total-volume: uint,
+    resolution-source: principal,
+    expires-at: uint,
+    is-resolved: bool,
+    winning-outcome: (optional uint)
+  }
+)
+
+(define-map market-positions
+  { market-id: uint, user: principal, outcome: uint }
+  {
+    shares: uint,
+    average-price: uint,
+    potential-payout: uint
   }
 )
 
