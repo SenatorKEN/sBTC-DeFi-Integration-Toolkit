@@ -366,7 +366,7 @@
   }
 )
 
-;; 10. PERPETUAL FUTURES
+;; PERPETUAL FUTURES
 (define-map perp-positions
   { position-id: uint }
   {
@@ -394,4 +394,54 @@
     maintenance-margin: uint
   }
 )
+
+(define-public (create-proposal 
+  (title (string-ascii 100))
+  (description (string-ascii 500))
+  (proposal-type (string-ascii 20))
+  (target-value uint))
+  (let ((proposal-id (var-get next-proposal-id))
+        (user-tokens (default-to u0 (get balance (map-get? governance-tokens { holder: tx-sender })))))
+    (asserts! (>= user-tokens (var-get min-proposal-threshold)) err-insufficient-voting-power)
+    (asserts! (not (var-get emergency-shutdown)) err-pool-frozen)
+    (map-set governance-proposals
+      { proposal-id: proposal-id }
+      {
+        proposer: tx-sender,
+        title: title,
+        description: description,
+        proposal-type: proposal-type,
+        target-value: target-value,
+        votes-for: u0,
+        votes-against: u0,
+        status: "active",
+        created-at: stacks-block-height,
+        voting-ends-at: (+ stacks-block-height (var-get voting-period)),
+        execution-delay: u144 ;; 1 day delay after voting ends
+      })
+    (var-set next-proposal-id (+ proposal-id u1))
+    (ok proposal-id)))
+
+(define-public (vote-on-proposal (proposal-id uint) (vote-for bool))
+  (let ((proposal (unwrap! (map-get? governance-proposals { proposal-id: proposal-id }) err-proposal-not-found))
+        (user-voting-power (default-to u0 (get voting-power (map-get? governance-tokens { holder: tx-sender })))))
+    (asserts! (< stacks-block-height (get voting-ends-at proposal)) err-voting-ended)
+    (asserts! (is-none (map-get? governance-votes { proposal-id: proposal-id, voter: tx-sender })) err-already-voted)
+    (asserts! (> user-voting-power u0) err-insufficient-voting-power)
+    
+    ;; Record the vote
+    (map-set governance-votes
+      { proposal-id: proposal-id, voter: tx-sender }
+      { vote-power: user-voting-power, vote-direction: vote-for, voted-at: stacks-block-height })
+    
+    ;; Update proposal vote counts
+    (if vote-for
+      (map-set governance-proposals
+        { proposal-id: proposal-id }
+        (merge proposal { votes-for: (+ (get votes-for proposal) user-voting-power) }))
+      (map-set governance-proposals
+        { proposal-id: proposal-id }
+        (merge proposal { votes-against: (+ (get votes-against proposal) user-voting-power) })))
+    (ok true)))
+
 
