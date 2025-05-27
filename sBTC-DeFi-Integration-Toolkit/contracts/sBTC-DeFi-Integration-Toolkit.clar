@@ -220,7 +220,7 @@
   }
 )
 
-;; 4. INSURANCE VAULTS
+;; INSURANCE VAULTS
 (define-map insurance-vaults
   { vault-id: uint }
   {
@@ -246,7 +246,7 @@
   }
 )
 
-;; 5. CROSS-CHAIN BRIDGE
+;; CROSS-CHAIN BRIDGE
 (define-map bridge-transfers
   { transfer-id: (buff 32) }
   {
@@ -272,4 +272,50 @@
   }
 )
 
+;; 6. NFT MARKETPLACE & FRACTIONALIZATION
+(define-map nft-listings
+  { nft-id: uint }
+  {
+    owner: principal,
+    contract: principal,
+    token-id: uint,
+    price: uint,
+    is-active: bool,
+    created-at: uint,
+    expires-at: uint
+  }
+)
+
+(define-map fractionalized-nfts
+  { fnft-id: uint }
+  {
+    original-nft-contract: principal,
+    original-token-id: uint,
+    total-fractions: uint,
+    fraction-price: uint,
+    vault-address: principal,
+    created-at: uint
+  }
+)
+
+(define-map fraction-holders
+  { fnft-id: uint, holder: principal }
+  {
+    fraction-amount: uint,
+    bought-at: uint
+  }
+)
+
+;; 7. AUTOMATED MARKET MAKER (AMM) WITH DYNAMIC FEES
+(define-map dynamic-fee-pools
+  { pool-id: uint }
+  {
+    base-fee: uint,
+    volatility-multiplier: uint,
+    volume-discount: uint,
+    last-volume: uint,
+    current-fee: uint,
+    fee-adjustment-frequency: uint
+  }
+)
 
