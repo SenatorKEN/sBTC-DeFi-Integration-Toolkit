@@ -172,3 +172,38 @@
   }
 )
 
+;; LENDING/BORROWING PROTOCOL
+(define-map lending-pools
+  { token: principal }
+  {
+    total-supplied: uint,
+    total-borrowed: uint,
+    supply-rate: uint,
+    borrow-rate: uint,
+    utilization-rate: uint,
+    reserve-factor: uint,
+    last-updated: uint,
+    is-active: bool
+  }
+)
+
+(define-map user-supplies
+  { token: principal, user: principal }
+  {
+    supplied-amount: uint,
+    supply-index: uint,
+    last-updated: uint
+  }
+)
+
+(define-map user-borrows
+  { token: principal, user: principal }
+  {
+    borrowed-amount: uint,
+    borrow-index: uint,
+    collateral-factor: uint,
+    last-updated: uint
+  }
+)
+
+
