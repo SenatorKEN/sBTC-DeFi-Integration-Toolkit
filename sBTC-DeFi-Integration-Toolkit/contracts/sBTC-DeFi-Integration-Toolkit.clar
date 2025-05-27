@@ -206,4 +206,17 @@
   }
 )
 
+;; FLASH LOAN SYSTEM
+(define-map flash-loans
+  { loan-id: uint }
+  {
+    borrower: principal,
+    token: principal,
+    amount: uint,
+    fee: uint,
+    is-repaid: bool,
+    created-at: uint,
+    expires-at: uint
+  }
+)
 
